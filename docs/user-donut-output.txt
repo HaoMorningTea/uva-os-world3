@@ -1,0 +1,19 @@
+xzl@FelixLin-XPS15 (main)[p1-kernel-lab3]$ ./run-rpi3qemu.sh 
+------ kernel boot ------  core 0
+VA_START ffff000000000000
+build time (kernel.c) Nov 10 2024 21:57:54
+phys mem: 00000000 -- 3f000000
+         kernel img: 00080000 -- 00112000
+         paging mem: 00112000 -- 3b900000
+                 959M 245742 pages
+         malloc mem: 3b900000 -- 3c100000
+                 8M
+         reserved for framebuffer: 3c100000 -- 3f000000
+mbox.c:379 OK. fb pa: 0x3c100000 w 640 h 640 vw 640 vh 640 pitch 2560 isrgb 0
+timer.c:139 cycles_per_us 493 cycles_per_ms 495049
+kernel.c:120 entering init
+Kernel process started at EL 1, pid 1
+sched.c:742 5759 bytes to load from img
+vm.c:618 demand paging at user va 0x7ffff40, elr 0x314
+Donut process entry
+fb 0x000000003C100000 pitch 2560

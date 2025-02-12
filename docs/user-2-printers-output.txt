@@ -1,0 +1,21 @@
+------ kernel boot ------  core 0
+VA_START ffff000000000000
+build time (kernel.c) Nov 10 2024 21:39:33
+phys mem: 00000000 -- 3f000000
+         kernel img: 00080000 -- 00112000
+         paging mem: 00112000 -- 3b900000
+                 959M 245742 pages
+         malloc mem: 3b900000 -- 3c100000
+                 8M
+         reserved for framebuffer: 3c100000 -- 3f000000
+mbox.c:379 OK. fb pa: 0x3c100000 w 640 h 640 vw 640 vh 640 pitch 2560 isrgb 0
+timer.c:139 cycles_per_us 506 cycles_per_ms 507614
+kernel.c:120 entering init
+Kernel process started at EL 1, pid 1
+sched.c:685 5735 bytes of user code to map
+kernel.c:67 move_to_user_mode ok
+vm.c:618 demand paging at user va 0x7ffffe0, elr 0xd4
+User process entry
+fork() succfork() succeeds
+abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabeeds
+1234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512345123451234512cdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcd

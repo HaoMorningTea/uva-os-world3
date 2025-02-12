@@ -1,0 +1,37 @@
+// dot -Tpng quests.dot -o quests.png
+
+// | Quest                       | Short Description                                                                 | Credits |
+// |-----------------------------|-----------------------------------------------------------------------------------|---------|
+// | Quest01: kernel virtaddr     | Boot kernel on virtual address space, set up pagetables, enable MMU.              |  30       |
+// | Quest02: user helloworld     | Create a kernel task, move it to user space, implement `write()` syscall.         |  20       |
+// | Quest03: two user printers   | Support user task to fork another, both print messages from user space.           |  20       |
+// | Quest04: user donut          | Run a user task that renders a donut, map framebuffer, support dynamic memory.    |  20       |
+// | Quest05: user donut on rpi3 | Run donut task on rpi3, handle CPU cache flushing.                          |    20     |
+// | Quest06: mario               | Run "Super Mario Bros (1983)" as a user task, support exec syscall, render game.  |  30       |
+// | Quest07: mario on rpi3| Run Mario game on rpi3, record gameplay video.                                    |   20      |
+
+
+digraph QuestDependencies {
+    // Define node styles
+    node [shape=box, style=filled, color=lightblue];
+
+    // Define the edges based on the relations
+    quest01 -> quest02;
+    quest02 -> quest03;
+    quest03 -> quest04;
+    quest03 -> quest05;
+    quest04 -> quest06;
+    quest04 -> quest07;
+    
+    // Define nodes with updated labels based on comments
+    quest01 [label="Quest01: kernel virtaddr\nBoot kernel on virtual address space, set up pagetables, enable MMU.\nCredits: 30"];
+    quest02 [label="Quest02: user helloworld\nCreate a kernel task, move it to user space, implement `write()` syscall.\nCredits: 20"];
+    quest03 [label="Quest03: two user printers\nSupport user task to fork another, both print messages from user space.\nCredits: 20"];
+    quest04 [label="Quest04: user donut\nRun a user task that renders a donut, map framebuffer, support dynamic memory.\nCredits: 20"];
+    quest05 [label="Quest05: user donut on rpi3\nRun donut task on rpi3, handle CPU cache flushing.\nCredits: 20"];
+    quest06 [label="Quest06: mario\nRun \"Super Mario Bros (1983)\" as a user task, support exec syscall, render game.\nCredits: 30"];
+    quest07 [label="Quest07: mario on rpi3\nRun Mario game on rpi3, record gameplay video.\nCredits: 20"];
+
+    // Set graph layout
+    // rankdir=LR; // Left to Right layout
+}
