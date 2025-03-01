@@ -1,9 +1,11 @@
 /* linker script for rpi3 emulated by qemu */
 
+PROVIDE(VA_START = 0xffff000000080000);
+
 SECTIONS
 {
 	/* quest: kernel virtaddr */
-	. = 0; /* TODO: replace this */
+	. = VA_START; /* TODO: replace this */
 	.text.boot : { *(.text.boot) }
 
 	/* include user text/data compiled as part of kernel 
@@ -26,6 +28,7 @@ SECTIONS
 	. = ALIGN(512);		/*sector aligned*/
 	nes_start = .; 
 	/* TODO: your code here */
+	.nes0 : { *(.nes0)}
 	/* we don't need to set "nes_end" */
 	
 	. = ALIGN(512);		/*sector aligned*/

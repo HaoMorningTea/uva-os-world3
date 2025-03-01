@@ -98,6 +98,11 @@ setup_sp:
 	// (assuming linear mapping, phys 0 --> virt VA_START)	
 	/* TODO: your code here */
 	// NB: we aren't using sp yet -- until mmu is on
+	ldr x0, =boot_stacks
+	add x0, x0, #4096     
+	ldr x1, = VA_START
+	add x0, x0, x1  
+	mov sp, x0
 
 	// below is new vs. boot.S in lab1/2
 	// load kernel's pgtable
@@ -125,6 +130,11 @@ setup_sp:
 	
 	// load the linking (virt) addr of kernel_main
 	/* TODO: your code here */
+	ldr x2, =kernel_main
+
 	ldr x0, =SCTLR_VALUE // Turn on MMU. cf sysregs.h
 	msr	sctlr_el1, x0	// BOOM! after this, this core runs on virtual addr
+
+	isb	// memory barrier
+
 	br 	x2				// Jump to kernel_main() (kernel.c)
