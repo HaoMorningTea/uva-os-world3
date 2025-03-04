@@ -689,13 +689,15 @@ static void _create_block_map(unsigned long *tbl,
     unsigned long block_size = 1UL << shift;
 	
 	// Calculate the number of entries based on the range from start to end.
-    unsigned long count = ((end - start) >> shift) + 1;
+    // unsigned long count = ((end - start) >> shift) + 1;
 
 	unsigned long start_idx = (start >> shift) & (PTRS_PER_TABLE-1);
 
+	unsigned long end_idx = (end >> shift) & (PTRS_PER_TABLE-1);	
+
     
     // Iterate over the table indices.
-    for (unsigned long i = start_idx; i < start_idx + count; i++) {
+    for (unsigned long i = start_idx; i < end_idx; i++) {
         // Each entry gets the physical base (aligned to block_size) and the provided flags.
         tbl[i] = (phys & ~(block_size - 1)) | flags;
         phys += block_size;
