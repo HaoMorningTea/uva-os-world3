@@ -1,6 +1,8 @@
 /* linker script for rpi3 emulated by qemu */
 
 PROVIDE(VA_START = 0xffff000000080000);
+/*PROVIDE(VA_START = 0x000000080000);*/
+
 
 SECTIONS
 {

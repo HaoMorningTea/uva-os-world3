@@ -690,9 +690,12 @@ static void _create_block_map(unsigned long *tbl,
 	
 	// Calculate the number of entries based on the range from start to end.
     unsigned long count = ((end - start) >> shift) + 1;
+
+	unsigned long start_idx = (start >> shift) & (PTRS_PER_TABLE-1);
+
     
     // Iterate over the table indices.
-    for (unsigned long i = 0; i < count; i++) {
+    for (unsigned long i = start_idx; i < start_idx + count; i++) {
         // Each entry gets the physical base (aligned to block_size) and the provided flags.
         tbl[i] = (phys & ~(block_size - 1)) | flags;
         phys += block_size;
@@ -728,7 +731,7 @@ void create_kern_pgtables(void) {
 	// allocate PUD & PMD1; link PGD (pg_dir)->PUD, and PUD->PMD1
 	create_table_entry(pgd, VA_START, PGD_SHIFT, 1); 
 	/* TODO: your code here */
-	create_table_entry(pud, VA_START, PUD_SHIFT, 2);
+	create_table_entry(pud, VA_START, PUD_SHIFT, 1);
 
 	// 1. kernel mem (PMD1). Phys addr range: 0--DEVICE_BASE
 	create_block_map_section(pmd1, 0, VA_START, 
@@ -740,7 +743,7 @@ void create_kern_pgtables(void) {
 	
 	// link PUD->PMD2
 	/* TODO: your code here */
-	pud[1] = VA2PA(pmd2) | MM_TYPE_PAGE_TABLE;
+	create_table_entry(pud, (VA_START + (1UL << (PUD_SHIFT))), PUD_SHIFT, 2);
 
 	// 3. extra device mem (PMD2). Phys addr range: DEVICE_LOW--+SECTION_SIZE
 	create_block_map_section(pmd2, DEVICE_LOW, 

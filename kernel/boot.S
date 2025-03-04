@@ -99,9 +99,7 @@ setup_sp:
 	/* TODO: your code here */
 	// NB: we aren't using sp yet -- until mmu is on
 	ldr x0, =boot_stacks
-	add x0, x0, #4096     
-	ldr x1, = VA_START
-	add x0, x0, x1  
+	add x0, x0, #4096      
 	mov sp, x0
 
 	// below is new vs. boot.S in lab1/2
