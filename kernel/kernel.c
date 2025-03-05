@@ -42,6 +42,14 @@ void kernel_process() {
 
 	/* TODO: your code here */
 
+	// Calculate the size of the user code region.
+	unsigned long size = end - begin;
+	// Calculate the offset for the entry function within the user code area.
+	unsigned long entry_offset = (unsigned long)user_process_hello - begin;
+
+	// Call move_to_user_mode to map the user code and prepare the trapframe.
+	err = move_to_user_mode(begin, size, entry_offset);
+
 	/* alternatively, call "move_to_user_mode_donut". maps usr pages on demand. 
 		can launch: donut (kuser), nes0 (binary elf embedded). */
 

@@ -748,8 +748,10 @@ void create_kern_pgtables(void) {
 	create_table_entry(pud, (VA_START + (1UL << (PUD_SHIFT))), PUD_SHIFT, 2);
 
 	// 3. extra device mem (PMD2). Phys addr range: DEVICE_LOW--+SECTION_SIZE
+	//create_block_map_section(pmd2, DEVICE_LOW, 
+		//VA_START + DEVICE_LOW, VA_START + DEVICE_LOW, MMU_DEVICE_FLAGS); /* TODO: replace this */
 	create_block_map_section(pmd2, DEVICE_LOW, 
-		VA_START + DEVICE_LOW, VA_START + DEVICE_LOW, MMU_DEVICE_FLAGS); /* TODO: replace this */
+		VA_START + DEVICE_LOW, VA_START + DEVICE_HIGH - SECTION_SIZE, MMU_DEVICE_FLAGS); 
 }
 
 /* A workaround for QEMU's quirks on MMU emulation, which also showcases how
