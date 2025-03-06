@@ -476,11 +476,16 @@ void free_task_pages(struct mm_struct *mm, int useronly) {
 	BUG_ON(!mm); 
 
 	sz = mm->sz; V("%s enter sz %lu", __func__, sz);
+	printf("[free_task_pages] initial mm->sz = 0x%lx (%lu bytes)\n", sz, sz);
 
 	if (growproc(mm, -sz) == (unsigned long)(void *)-1) {
+		printf("[free_task_pages] growproc failed, sz = 0x%lx\n", sz);
 		BUG(); 
 		return; 
 	}
+
+	printf("[free_task_pages] growproc succeeded.\n");
+
 	// XXX: free stack pages.... 	
 	if (!useronly) {
 		// free kern pages. must handle with care. 
@@ -550,7 +555,8 @@ unsigned long growproc (struct mm_struct *mm, int incr) {
 	int ret; 
 	
 	// careful: sz is unsigned; incr is signed
-	if (incr < 0 && (mm->sz + incr < mm->codesz)) { /* TODO: replace this */
+	//if (incr < 0 && (mm->sz + incr < mm->codesz)) { /* TODO: replace this */
+	if (incr < 0 && (mm->sz < -incr)) {
 		W("incr too small"); 
 		W("sz 0x%lx %ld (dec) incr %d (dec). requested new brk 0x%lx", 
 			sz, sz, incr, sz+incr); 

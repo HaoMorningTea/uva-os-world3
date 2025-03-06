@@ -68,6 +68,7 @@ static int flags2perm(int flags) {
 */
 //quest: mario
 int exec0(const char *elfbase, char **argv_unused /*ignored*/) {
+  printf("exec0 called.\n");
   // char *s, *last;
   int i, off;
   uint64 argc, sz = 0, sz1, sp, ustack[MAXARG]/*a scratch buf*/, argbase; 
@@ -81,6 +82,7 @@ int exec0(const char *elfbase, char **argv_unused /*ignored*/) {
   I("pid %d exec0 called. elfbase %lx", myproc()->pid, (unsigned long)elfbase);
 
   memmove((void*)&elf, elfbase, sizeof(elf)); 
+  printf("ELF entry: 0x%lx, phoff: %lx, phnum: %d\n", elf.entry, elf.phoff, elf.phnum);
 
   if(elf.magic != ELF_MAGIC) // ELF magic good?
     goto bad;
@@ -130,7 +132,9 @@ int exec0(const char *elfbase, char **argv_unused /*ignored*/) {
   }
   
   sz = PGROUNDUP(sz);
-  
+
+  printf("final calculated sz (user mem size): 0x%lx\n", sz);
+
   V("pid %d done loading prog. end sz (VA) %lx", myproc()->pid, sz); 
   
   /* Alloc a fresh user stack  */
@@ -145,6 +149,8 @@ int exec0(const char *elfbase, char **argv_unused /*ignored*/) {
     BUG(); 
     goto bad; 
   }
+
+  //printf("done with allocating pages.\n");
 
   /* Prep & passes arguments to the user task */
 #define NARGS   7
@@ -182,11 +188,13 @@ int exec0(const char *elfbase, char **argv_unused /*ignored*/) {
     // mmap fb area to user VM    
     for (; fb_pa < fb_pa_end; fb_pa += PAGE_SIZE) {
       unsigned long * ret = map_page(tmpmm, 
-          0,0, /* TODO: replace this */
+          fb_pa, fb_pa, /* TODO: replace this */
           1 /* alloc pgtable on demand*/, 
           MMU_PTE_FLAGS | MM_AP_RW /* perm */); 
       BUG_ON(!ret);     
     }
+
+    //printf("done with mapping fb.\n");
   }
 
   // project idea: alternatively, make subsequent fork() inhert fb mapping, so that 
@@ -216,7 +224,7 @@ int exec0(const char *elfbase, char **argv_unused /*ignored*/) {
   sp -= sp % 16;  // from riscv, arm64 may not need this
   if(sp < argbase)
     goto bad;
-  if(copyout(tmpmm, sp, 0, 0)<0) /* TODO: replace this */
+  if(copyout(tmpmm, sp, (char *)ustack, (argc+1) * sizeof(uint64))<0) /* TODO: replace this */
     goto bad;
 
   // arguments to user main(argc, argv)
@@ -229,21 +237,31 @@ int exec0(const char *elfbase, char **argv_unused /*ignored*/) {
   /* Commit to the user VM. free previous user mapping & pages. if any */
   regs->pc = elf.entry;  // initial program counter = main
   // set the initial stack pointer
-  regs->sp = 0; /* TODO: replace this */
+  regs->sp = sp; /* TODO: replace this */
   I("pid %d (%s) commit to user VM, sp 0x%lx", myproc()->pid, myproc()->name, sp);
 
+  printf("Committed regs->sp: 0x%lx\n", regs->sp);
+
   acquire(&p->mm->lock); 
+
+  printf("Acquired p->mm->lock.\n");
+
   free_task_pages(p->mm, 1 /*useronly*/);  
+
+  printf("free_task_pages done.\n");
 
   // Careful: transfer refcnt/lock from the existing mm
   tmpmm->ref = p->mm->ref; // mm::lock ensures memory barriers needed for mm::ref
   tmpmm->lock = p->mm->lock; 
   *(p->mm) = *tmpmm;  // commit (NB: compiled as memcpy())
   p->mm->sz = p->mm->codesz = sz;  
+
+  printf("Committed p->mm->sz: 0x%lx\n", p->mm->sz);
+
   V("pid %d p->mm %lx p->mm->sz %lu", p->pid,(unsigned long)p->mm, p->mm->sz);
   kfree(tmpmm); 
   // make the pgtable tree effective
-  set_pgd(0); /* TODO: replace this */
+  set_pgd(p->mm->pgd); /* TODO: replace this */
   release(&p->mm->lock);
 
   I("pid %d exec succeeds", myproc()->pid);

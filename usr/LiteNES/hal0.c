@@ -118,14 +118,14 @@ void nes_flush_buf(PixelBuf *buf) {
         Pixel *p = &buf->buf[i];
         int x = p->x, y = p->y;
         pal color = palette[p->c];    
-        PIXEL c = 0; /* TODO: replace this */
+        PIXEL c = fcecolor_to_pixel(color); /* TODO: replace this */
 
         // Pixel could have coorindates x<0 (looks like fce shifts drawn
         //  pixels by applying offsets to them). These pixels shall be
         //  invisible on fb. 
         assert(x<SCREEN_WIDTH && y>=0 && y<SCREEN_HEIGHT);
         if (x>=0)
-            setpixel(0,0,x,y,0,0); /* TODO: replace this */
+            setpixel(cur_id,vtx,x,y,pitch,c); /* TODO: replace this */
     }
 }
 
@@ -135,7 +135,7 @@ void nes_hal_init() {
     assert(cfg.vwidth >= SCREEN_WIDTH);
     assert(cfg.vheight >= SCREEN_HEIGHT);
 
-    vtx_sz = 0; /* TODO: replace this */
+    vtx_sz = cfg.pitch * cfg.vheight; /* TODO: replace this */
     vtx = malloc(vtx_sz);
     if (!vtx) {printf("failed to alloc vtx\n"); exit(1);}
     printf("fb alloc ...ok\n"); 
@@ -148,7 +148,7 @@ void nes_flip_display()
 {
     assert(vtx && vtx_sz); 
     // printf("draw...\n");    
-    memmove(0,0,vtx_sz); /* TODO: replace this */
+    memmove(cfg.fb,vtx,vtx_sz); /* TODO: replace this */
 }
 
 /* Query a button's state. b: the button idx. 

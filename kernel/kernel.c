@@ -63,13 +63,25 @@ void kernel_process() {
 		can launch: donut (kuser), nes0 (binary elf embedded). */
 
 	/* TODO: your code here */
+	// //for quest 4
+	// unsigned long size = end - begin;
+	// unsigned long entry_offset = (unsigned long)user_donut - begin;
+	// err = move_to_user_mode_donut(begin, size, entry_offset);
+	
+	// if (err < 0){
+	// 	printf("Error while moving process to user mode\n\r");
+	// } else I("move_to_user_mode ok");
+
+
+	// for quest 5
 	unsigned long size = end - begin;
-	unsigned long entry_offset = (unsigned long)user_donut - begin;
+	unsigned long entry_offset = (unsigned long)user_process_mario - begin;
 	err = move_to_user_mode_donut(begin, size, entry_offset);
 	
 	if (err < 0){
 		printf("Error while moving process to user mode\n\r");
 	} else I("move_to_user_mode ok");
+
 	/* this func is called from ret_from_fork (entry.S). after returning from
 	this func, it goes back to ret_from_fork and performs kernel_exit there.
 	hence, trapframe populated by move_to_user_mode() will take effect.  */
