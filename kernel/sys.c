@@ -58,11 +58,12 @@ fetchstr(uint64 addr, char *buf, int max)
 int argstr(uint64 addr, char *buf, int max) {return fetchstr(addr, buf, max);};
 
 int sys_fork(void) {
+	printf("fork called. pid %d", myproc()->pid);
 	return copy_process(0 /*clone_flags*/, 0 /*fn*/, 0 /*arg*/, 0/*inherit name*/);
 }
 
 int sys_exit(int c){
-	I("exit called. pid %d code %d", myproc()->pid, c);
+	printf("exit called. pid %d code %d", myproc()->pid, c);
 	exit_process(c);
 	return 0; 
 }

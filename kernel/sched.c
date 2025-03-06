@@ -696,7 +696,7 @@ int move_to_user_mode(unsigned long start, unsigned long size, unsigned long pc)
 
 	regs->pstate = PSR_MODE_EL0t;
 	regs->pc = pc; /* TODO: replace this */
-	regs->sp = 2 * PAGE_SIZE ; /* TODO: replace this */
+	regs->sp = USER_VA_END; /* TODO: replace this */
 
     
     /* Map 2 code pages (instead of 1), so that we can experiment with 
@@ -849,8 +849,14 @@ int copy_process(unsigned long clone_flags, unsigned long fn, unsigned long arg,
         struct trapframe *cur_regs = task_pt_regs(cur);
         // copy over the parent's entire trapframe to the child
         /* TODO: your code here */
-        // set fork()'s return value for the child 
+        memcpy(childregs, cur_regs, sizeof(struct trapframe));
+        //printf("Parent trapframe: pc=%lx, sp=%lx, r0=%lx\n", cur_regs->pc, cur_regs->sp, cur_regs->regs[0]);
+        //printf("Child trapframe (after copy): pc=%lx, sp=%lx, r0=%lx\n", childregs->pc, childregs->sp, childregs->regs[0]);
+        
+        // set fork()'s return value for the child
         /* TODO: your code here */
+        childregs->regs[0] = 0;
+
         if (clone_flags & PF_UTHREAD) {	// fork a "thread", i.e. child to share the parent's existing mm
             p->mm = cur->mm; BUG_ON(!p->mm);
             __atomic_add_fetch(&p->mm->ref, 1, __ATOMIC_SEQ_CST);
@@ -861,7 +867,7 @@ int copy_process(unsigned long clone_flags, unsigned long fn, unsigned long arg,
             if (!mm) {BUG(); return -1;}  // XXX: reverse task allocation
 			// now we hold mm->lock
             p->mm = mm; V("new mm %lx", (unsigned long)mm); 
-            dup_current_virt_memory(mm); // duplicate virt memory (inc contents)
+            dup_current_virt_memory(mm); // duplicate virt memory (inc contents)            
             release(&mm->lock);
             // same pc, same sp
         }

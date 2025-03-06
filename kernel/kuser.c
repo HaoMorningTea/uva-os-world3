@@ -55,7 +55,7 @@ static void loop1(char *str) {
 
 void user_process_printers() {    
     print_to_console("User process entry\n\r");
-
+    print_to_console("About to fork\n\r");
     int pid = call_sys_fork();
     if (pid < 0) {
         print_to_console("Error during fork\n\r");
@@ -69,6 +69,9 @@ void user_process_printers() {
     } else {
         loop1("12345");
     }
+
+    // should never reach here
+    call_sys_exit(1);
 }
 
 /* -----------------------------------------------------*/

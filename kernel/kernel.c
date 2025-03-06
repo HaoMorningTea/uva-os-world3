@@ -42,13 +42,22 @@ void kernel_process() {
 
 	/* TODO: your code here */
 
-	// Calculate the size of the user code region.
-	unsigned long size = end - begin;
-	// Calculate the offset for the entry function within the user code area.
-	unsigned long entry_offset = (unsigned long)user_process_hello - begin;
+	// // for quest2
+	// // Calculate the size of the user code region.
+	// unsigned long size = end - begin;
+	// // Calculate the offset for the entry function within the user code area.
+	// unsigned long entry_offset = (unsigned long)user_process_hello - begin;
 
-	// Call move_to_user_mode to map the user code and prepare the trapframe.
+	// // Call move_to_user_mode to map the user code and prepare the trapframe.
+	// err = move_to_user_mode(begin, size, entry_offset);
+
+	//for quest 3
+	unsigned long size = end - begin;
+	unsigned long entry_offset = (unsigned long)user_process_printers - begin;
+	printf("user_begin = 0x%lx, user_end = 0x%lx, size = 0x%lx\n", begin, end, size);
+	printf("entry_offset = 0x%lx\n", entry_offset);
 	err = move_to_user_mode(begin, size, entry_offset);
+
 
 	/* alternatively, call "move_to_user_mode_donut". maps usr pages on demand. 
 		can launch: donut (kuser), nes0 (binary elf embedded). */
