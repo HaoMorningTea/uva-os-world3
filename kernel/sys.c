@@ -101,7 +101,7 @@ unsigned long sys_sbrk(int incr) {
 		release(&myproc()->mm->lock); return sz;
 	}
 
-	sz = growproc(myproc()->mm, 0); /* TODO: replace this */
+	sz = growproc(myproc()->mm, incr); /* TODO: replace this */
 	release(&myproc()->mm->lock);
 	if (sz == (unsigned long)-1) 
 		W("sys_sbrk failed. requestsed brk %lx", sz0 + incr); 
@@ -145,6 +145,7 @@ extern int sys_exec(unsigned long upath, unsigned long uargv);
 extern int sys_fork();		// sys.c
 
 extern unsigned long sys_sbrk(int incr); // vm.c
+
 extern int sys_sleep(int ms); // timer.c
 
 // our placeholder. NB: syscall handlers (sys_XXX) can have arbitrary signatures

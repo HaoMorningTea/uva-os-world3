@@ -52,17 +52,20 @@ void kernel_process() {
 	// err = move_to_user_mode(begin, size, entry_offset);
 
 	//for quest 3
-	unsigned long size = end - begin;
-	unsigned long entry_offset = (unsigned long)user_process_printers - begin;
-	printf("user_begin = 0x%lx, user_end = 0x%lx, size = 0x%lx\n", begin, end, size);
-	printf("entry_offset = 0x%lx\n", entry_offset);
-	err = move_to_user_mode(begin, size, entry_offset);
+	// unsigned long size = end - begin;
+	// unsigned long entry_offset = (unsigned long)user_process_printers - begin;
+	// printf("user_begin = 0x%lx, user_end = 0x%lx, size = 0x%lx\n", begin, end, size);
+	// printf("entry_offset = 0x%lx\n", entry_offset);
+	//err = move_to_user_mode_donut(begin, size, entry_offset);
 
 
 	/* alternatively, call "move_to_user_mode_donut". maps usr pages on demand. 
 		can launch: donut (kuser), nes0 (binary elf embedded). */
 
 	/* TODO: your code here */
+	unsigned long size = end - begin;
+	unsigned long entry_offset = (unsigned long)user_donut - begin;
+	err = move_to_user_mode_donut(begin, size, entry_offset);
 	
 	if (err < 0){
 		printf("Error while moving process to user mode\n\r");

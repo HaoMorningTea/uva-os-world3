@@ -550,13 +550,15 @@ unsigned long growproc (struct mm_struct *mm, int incr) {
 	int ret; 
 	
 	// careful: sz is unsigned; incr is signed
-	if (1) { /* TODO: replace this */
+	if (incr < 0 && (mm->sz + incr < mm->codesz)) { /* TODO: replace this */
 		W("incr too small"); 
 		W("sz 0x%lx %ld (dec) incr %d (dec). requested new brk 0x%lx", 
 			sz, sz, incr, sz+incr); 
 		goto bad; 
 	}
-	if (1) { /* TODO: replace this */
+	struct trapframe *regs = task_pt_regs(myproc());
+	if (incr > 0 && (mm->sz < regs->sp) &&
+        (mm->sz + incr > regs->sp - PAGE_SIZE)) { /* TODO: replace this */
 		W("incr too large"); 
 		W("sz 0x%lx %ld (dec) incr %d (dec). requested new brk 0x%lx", 
 		sz, sz, incr, sz+incr); 
@@ -564,7 +566,8 @@ unsigned long growproc (struct mm_struct *mm, int incr) {
 	}
 
 	if (incr >= 0) {		// brk grows
-		for (; ; ) { /* TODO: replace this */
+		unsigned long new_brk = mm->sz + incr;
+		for (sz1 = PGROUNDUP(mm->sz); sz1 < PGROUNDUP(new_brk); sz1 += PAGE_SIZE) { /* TODO: replace this */
 			kva = allocate_user_page_mm(mm, sz1, MM_AP_RW | MM_XN); 
 			if (!kva) {
 				W("allocate_user_page_mm failed");
